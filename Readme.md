@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Наталья Зайцева](https://up.htmlacademy.ru/javascript/20/user/1005855).
-* Наставник: [Виталий Яковенко](https://htmlacademy.ru/profile/id376639).
+* Наставник: [Иван Патрицкий](https://htmlacademy.ru/profile/id1218325).
 
 ---
 
