@@ -9,7 +9,6 @@ var MIN_Y = 130 + 70;
 var MAX_Y = 630;
 var MIN_X = 0;
 
-var array = [];
 var map = document.querySelector('.map');
 var pinListElement = document.querySelector('.map__pins');
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -34,9 +33,10 @@ var getRandomArray = function (arr) {
   return randomArray;
 };
 
-var getArray = function () {
+var getAds = function () {
+  var ads = [];
   for (var i = 0; i < AMOUNT_ELEMENTS; i++) {
-    var element = {
+    var ad = {
       'author': {
         'avatar': 'img/avatars/user0' + (i + 1) + '.png'
       },
@@ -58,23 +58,28 @@ var getArray = function () {
         'y': getRandomArbitrary(MIN_Y, MAX_Y)
       }
     };
-    array.push(element);
+    ads.push(ad);
   }
+  return ads;
 };
 
-map .classList.remove('map--faded');
-getArray();
+var renderView = function (data) {
+  for (var i = 0; i < data.length; i++) {
+    var pinElement = pinTemplate.cloneNode(true);
 
-for (var i = 0; i < array.length; i++) {
-  var pinElement = pinTemplate.cloneNode(true);
+    pinElement.setAttribute('style', 'left: ' + (data[i].location.x - 25) + 'px; top: ' + (data[i].location.y - 70) + 'px;');
 
-  pinElement.setAttribute('style', 'left: ' + (array[i].location.x - 25) + 'px; top: ' + (array[i].location.y - 70) + 'px;');
+    pinElement.querySelector('img').setAttribute('src', data[i].author.avatar);
 
-  pinElement.querySelector('img').setAttribute('src', array[i].author.avatar);
+    pinElement.querySelector('img').setAttribute('alt', data[i].offer.title);
 
-  pinElement.querySelector('img').setAttribute('alt', array[i].offer.title);
+    fragment.appendChild(pinElement);
+  }
+  pinListElement.appendChild(fragment);
+};
 
-  fragment.appendChild(pinElement);
-}
+map.classList.remove('map--faded');
 
-pinListElement.appendChild(fragment);
+var viewData = getAds();
+
+renderView(viewData);
