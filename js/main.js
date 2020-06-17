@@ -197,9 +197,9 @@ housingRooms.addEventListener('change', function () {
 
   for (var i = housingGuests.options.length - 1; i >= 0; i--) {
     if (RvsG[housingRooms.options[housingRooms.selectedIndex].value].indexOf(housingGuests.options[i].value) === -1) {
-      housingGuests.options[i].setAttribute('disabled', 'disabled');
+      housingGuests.options[i].style.display = 'none';
     } else {
-      housingGuests.options[i].removeAttribute('disabled');
+      housingGuests.options[i].style.display = 'block';
     }
   }
 });
