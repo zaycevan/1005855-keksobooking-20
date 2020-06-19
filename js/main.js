@@ -156,6 +156,12 @@ var activatePage = function () {
   enableInput(mapFilterChildren);
 };
 
+var fillAddressInput = function (pin, ShapeCoefficient, pinHeight) {
+  var addressX = Math.round(parseInt(pin.style.left, 10) + pin.offsetWidth / 2);
+  var addressY = Math.round(parseInt(pin.style.top, 10) + pin.offsetHeight / ShapeCoefficient + pinHeight);
+  address.value = addressX + ', ' + addressY;
+};
+
 pinMain.addEventListener('mousedown', function (evt) {
   if (evt.button === 0) {
     evt.preventDefault();
@@ -174,20 +180,8 @@ pinMain.addEventListener('keydown', function (evt) {
   }
 });
 
-var fillAddressInput = function (pin, ShapeCoefficient, pinHeight) {
-  var addressX = Math.round(parseInt(pin.style.left, 10) + pin.offsetWidth / 2);
-  var addressY = Math.round(parseInt(pin.style.top, 10) + pin.offsetHeight / ShapeCoefficient + pinHeight);
-  address.value = addressX + ', ' + addressY;
-};
-
-disableInput(adFormFieldsets);
-
-disableInput(mapFilterChildren);
-
-fillAddressInput(pinMain, CIRCLE_SHAPE_COEFFICIENT, PIN_HEIGHT);
-
 housingRooms.addEventListener('change', function () {
-  var RvsG = {
+  var ROOMS_VS_GUESTS = {
     1: '1',
     2: ['1', '2'],
     3: ['1', '2', '3'],
@@ -195,11 +189,21 @@ housingRooms.addEventListener('change', function () {
     any: ['any', '0', '1', '2', '3']
   };
 
-  for (var i = housingGuests.options.length - 1; i >= 0; i--) {
-    if (RvsG[housingRooms.options[housingRooms.selectedIndex].value].indexOf(housingGuests.options[i].value) === -1) {
+  for (var i = 0; i < housingGuests.options.length; i++) {
+    if (ROOMS_VS_GUESTS[housingRooms.options[housingRooms.selectedIndex].value].indexOf(housingGuests.options[i].value) === -1) {
       housingGuests.options[i].style.display = 'none';
     } else {
       housingGuests.options[i].style.display = 'block';
     }
   }
+
+  if (ROOMS_VS_GUESTS[housingRooms.options[housingRooms.selectedIndex].value].indexOf(housingGuests.value) === -1) {
+    housingGuests.value = 'any';
+  }
 });
+
+disableInput(adFormFieldsets);
+
+disableInput(mapFilterChildren);
+
+fillAddressInput(pinMain, CIRCLE_SHAPE_COEFFICIENT, PIN_HEIGHT);
