@@ -17,6 +17,13 @@ var PIN_SHAPE_COEFFICIENT = 1;
 var CIRCLE_SHAPE_COEFFICIENT = 2;
 var PIN_HEIGHT = 0;
 var MAIN_PIN_HEIGHT = 22;
+var ROOMS_VS_GUESTS = {
+  1: '1',
+  2: ['1', '2'],
+  3: ['1', '2', '3'],
+  100: '0',
+  any: ['any', '0', '1', '2', '3']
+};
 
 var map = document.querySelector('.map');
 var pinListElement = document.querySelector('.map__pins');
@@ -33,6 +40,8 @@ var mapFilterChildren = mapFilter.children;
 var address = adForm.querySelector('#address');
 var housingRooms = mapFilter.querySelector('#housing-rooms');
 var housingGuests = mapFilter.querySelector('#housing-guests');
+var roomNumber = adForm.querySelector('#room_number');
+var capacity = adForm.querySelector('#capacity');
 
 // Получение рандомных значений
 var getRandom = function (number) {
@@ -262,26 +271,26 @@ pinMain.addEventListener('keydown', function (evt) {
 });
 
 // Поле «Количество комнат» синхронизировано с полем «Количество мест»
-housingRooms.addEventListener('change', function () {
-  var ROOMS_VS_GUESTS = {
-    1: '1',
-    2: ['1', '2'],
-    3: ['1', '2', '3'],
-    100: '0',
-    any: ['any', '0', '1', '2', '3']
-  };
-
-  for (var i = 0; i < housingGuests.options.length; i++) {
-    if (ROOMS_VS_GUESTS[housingRooms.options[housingRooms.selectedIndex].value].indexOf(housingGuests.options[i].value) === -1) {
-      housingGuests.options[i].style.display = 'none';
+var getNumberGuests = function (rooms, guests) {
+  guests.value = rooms.options[rooms.selectedIndex].value;
+  if (rooms.options[rooms.selectedIndex].value === '100') {
+    guests.value = '0';
+  }
+  for (var i = 0; i < guests.options.length; i++) {
+    if (ROOMS_VS_GUESTS[rooms.options[rooms.selectedIndex].value].indexOf(guests.options[i].value) === -1) {
+      guests.options[i].style.display = 'none';
     } else {
-      housingGuests.options[i].style.display = 'block';
+      guests.options[i].style.display = 'block';
     }
   }
+};
 
-  if (ROOMS_VS_GUESTS[housingRooms.options[housingRooms.selectedIndex].value].indexOf(housingGuests.value) === -1) {
-    housingGuests.value = 'any';
-  }
+housingRooms.addEventListener('change', function () {
+  getNumberGuests(housingRooms, housingGuests);
+});
+
+roomNumber.addEventListener('change', function () {
+  getNumberGuests(roomNumber, capacity);
 });
 
 // Валидация Заголовка объявления
@@ -309,7 +318,8 @@ var getMinPrice = function () {
     bungalo: 0,
     flat: 1000,
     house: 5000,
-    palace: 10000};
+    palace: 10000
+  };
 
   for (var i = 0; i < type.options.length; i++) {
     price.setAttribute('min', TYPES_VS_PRICE[type.options[type.selectedIndex].value]);
