@@ -50,6 +50,7 @@
 
   window.map = {
     map: map,
+    pinMain: pinMain,
     renderCard: renderCard
   };
 
