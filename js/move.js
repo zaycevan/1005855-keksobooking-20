@@ -19,37 +19,43 @@
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
 
+      // расстояние сдвига метки
       var shift = {
         x: startCoords.x - moveEvt.clientX,
         y: startCoords.y - moveEvt.clientY
       };
 
+      // начальные координаты метки
       startCoords = {
         x: moveEvt.clientX,
         y: moveEvt.clientY
       };
 
-      var addressCoords = {
+      // координаты острого конца метки
+      var pinBottomCoords = {
         x: window.map.pinMain.offsetLeft + window.map.pinMain.offsetWidth / 2,
         y: window.map.pinMain.offsetTop + window.map.pinMain.offsetHeight / PIN_SHAPE_COEFFICIENT + MAIN_PIN_HEIGHT
       };
 
-      if (addressCoords.x >= MIN_X && addressCoords.x <= maxX && addressCoords.y >= MIN_Y && addressCoords.y <= MAX_Y) {
+      // ограничиваем перемещение метки в пределах карты
+      if (pinBottomCoords.x >= MIN_X && pinBottomCoords.x <= maxX && pinBottomCoords.y >= MIN_Y && pinBottomCoords.y <= MAX_Y) {
         window.map.pinMain.style.top = (window.map.pinMain.offsetTop - shift.y) + 'px';
         window.map.pinMain.style.left = (window.map.pinMain.offsetLeft - shift.x) + 'px';
-      } else if (addressCoords.x < MIN_X) {
+      } else if (pinBottomCoords.x < MIN_X) {
         window.map.pinMain.style.left = (-window.map.pinMain.offsetWidth / 2) + 'px';
-      } else if (addressCoords.x > maxX) {
+      } else if (pinBottomCoords.x > maxX) {
         window.map.pinMain.style.left = maxX - 1 - window.map.pinMain.offsetWidth / 2 + 'px';
-      } else if (addressCoords.y < MIN_Y) {
+      } else if (pinBottomCoords.y < MIN_Y) {
         window.map.pinMain.style.top = MIN_Y - window.map.pinMain.offsetHeight - MAIN_PIN_HEIGHT + 'px';
-      } else if (addressCoords.y > MAX_Y) {
+      } else if (pinBottomCoords.y > MAX_Y) {
         window.map.pinMain.style.top = MAX_Y - window.map.pinMain.offsetHeight - MAIN_PIN_HEIGHT + 'px';
       }
 
+      // заполняем поле формы "Адрес"
       window.form.fillAddressInput(window.map.pinMain, PIN_SHAPE_COEFFICIENT, MAIN_PIN_HEIGHT);
     };
 
+    // убираем обработчки событий после отпускания пина
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
       document.removeEventListener('mousemove', onMouseMove);
