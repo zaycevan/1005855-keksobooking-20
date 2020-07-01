@@ -34,8 +34,8 @@
 
   // Заполнение поля Адреса
   var fillAddressInput = function (pinShape, shapeCoefficient, pinHeight) {
-    var addressX = Math.round(parseInt(pinShape.style.left, 10) + pinShape.offsetWidth / 2);
-    var addressY = Math.round(parseInt(pinShape.style.top, 10) + pinShape.offsetHeight / shapeCoefficient + pinHeight);
+    var addressX = Math.round(pinShape.offsetLeft + pinShape.offsetWidth / 2);
+    var addressY = Math.round(pinShape.offsetTop + pinShape.offsetHeight / shapeCoefficient + pinHeight);
     address.value = addressX + ', ' + addressY;
   };
 
