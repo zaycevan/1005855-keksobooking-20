@@ -1,15 +1,21 @@
 'use strict';
 
 (function () {
-  window.map.pinMain.addEventListener('mousedown', function (evt) {
-    evt.preventDefault();
+  var PIN_SHAPE_COEFFICIENT = 1;
+  var MAIN_PIN_HEIGHT = 22;
+  var MIN_Y = 130;
+  var MAX_Y = 630;
+  var MIN_X = 0;
+  var maxX = window.map.map.offsetWidth;
+  var pinMain = document.querySelector('.map__pin--main');
 
-    var PIN_SHAPE_COEFFICIENT = 1;
-    var MAIN_PIN_HEIGHT = 22;
-    var MIN_Y = 130;
-    var MAX_Y = 630;
-    var MIN_X = 0;
-    var maxX = window.map.map.offsetWidth;
+  // проверка, что координаты метки внутри карты
+  var isInsideMap = function (x, y) {
+    return x >= MIN_X && x <= maxX && y >= MIN_Y && y <= MAX_Y;
+  };
+
+  pinMain.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
 
     var startCoords = {
       x: evt.clientX,
@@ -33,26 +39,26 @@
 
       // координаты острого конца метки
       var pinBottomCoords = {
-        x: window.map.pinMain.offsetLeft + window.map.pinMain.offsetWidth / 2,
-        y: window.map.pinMain.offsetTop + window.map.pinMain.offsetHeight / PIN_SHAPE_COEFFICIENT + MAIN_PIN_HEIGHT
+        x: pinMain.offsetLeft + pinMain.offsetWidth / 2,
+        y: pinMain.offsetTop + pinMain.offsetHeight / PIN_SHAPE_COEFFICIENT + MAIN_PIN_HEIGHT
       };
 
       // ограничиваем перемещение метки в пределах карты
-      if (pinBottomCoords.x >= MIN_X && pinBottomCoords.x <= maxX && pinBottomCoords.y >= MIN_Y && pinBottomCoords.y <= MAX_Y) {
-        window.map.pinMain.style.top = (window.map.pinMain.offsetTop - shift.y) + 'px';
-        window.map.pinMain.style.left = (window.map.pinMain.offsetLeft - shift.x) + 'px';
+      if (isInsideMap(pinBottomCoords.x, pinBottomCoords.y)) {
+        pinMain.style.top = (pinMain.offsetTop - shift.y) + 'px';
+        pinMain.style.left = (pinMain.offsetLeft - shift.x) + 'px';
       } else if (pinBottomCoords.x < MIN_X) {
-        window.map.pinMain.style.left = (-window.map.pinMain.offsetWidth / 2) + 'px';
+        pinMain.style.left = (-pinMain.offsetWidth / 2) + 'px';
       } else if (pinBottomCoords.x > maxX) {
-        window.map.pinMain.style.left = maxX - 1 - window.map.pinMain.offsetWidth / 2 + 'px';
+        pinMain.style.left = maxX - 1 - pinMain.offsetWidth / 2 + 'px';
       } else if (pinBottomCoords.y < MIN_Y) {
-        window.map.pinMain.style.top = MIN_Y - window.map.pinMain.offsetHeight - MAIN_PIN_HEIGHT + 'px';
+        pinMain.style.top = MIN_Y - pinMain.offsetHeight - MAIN_PIN_HEIGHT + 'px';
       } else if (pinBottomCoords.y > MAX_Y) {
-        window.map.pinMain.style.top = MAX_Y - window.map.pinMain.offsetHeight - MAIN_PIN_HEIGHT + 'px';
+        pinMain.style.top = MAX_Y - pinMain.offsetHeight - MAIN_PIN_HEIGHT + 'px';
       }
 
       // заполняем поле формы "Адрес"
-      window.form.fillAddressInput(window.map.pinMain, PIN_SHAPE_COEFFICIENT, MAIN_PIN_HEIGHT);
+      window.form.fillAddressInput(pinMain, PIN_SHAPE_COEFFICIENT, MAIN_PIN_HEIGHT);
     };
 
     // убираем обработчки событий после отпускания пина
