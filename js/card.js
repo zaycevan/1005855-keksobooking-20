@@ -8,6 +8,21 @@
     'bungalo': 'Бунгало'};
   var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 
+  var getPluralWord = function (number, one, two, five) {
+    var n = Math.abs(number);
+    n %= 100;
+    if (n >= 5 && n <= 20) {
+      return five;
+    }
+    n %= 10;
+    if (n === 1) {
+      return one;
+    } else if (n >= 2 && n <= 4) {
+      return two;
+    }
+    return five;
+  };
+
   // Получение карточки объявления
   var getCard = function (data) {
     var cardElement = cardTemplate.cloneNode(true);
@@ -21,7 +36,8 @@
     cardElement.querySelector('.popup__text--address').textContent = data.offer.address;
     cardElement.querySelector('.popup__text--price').textContent = data.offer.price + ' ₽/ночь';
     cardElement.querySelector('.popup__type').textContent = TYPES_RUS[data.offer.type];
-    cardElement.querySelector('.popup__text--capacity').textContent = data.offer.rooms + ' комнаты для ' + data.offer.guests + ' гостей';
+    cardElement.querySelector('.popup__text--capacity').textContent = data.offer.rooms + getPluralWord(data.offer.rooms, ' комната', ' комнаты', ' комнат')
+     + ' для ' + data.offer.guests + getPluralWord(data.offer.guests, ' гостя', ' гостей', ' гостей');
     cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + data.offer.checkin + ' выезд до ' + data.offer.checkout;
     cardElement.querySelector('.popup__description').textContent = data.offer.description;
     cardElement.querySelector('.popup__avatar').setAttribute('src', data.author.avatar);

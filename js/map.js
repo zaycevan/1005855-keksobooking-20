@@ -9,6 +9,16 @@
   var pinListElement = document.querySelector('.map__pins');
   var pinMain = pinListElement.querySelector('.map__pin--main');
 
+  // ошибка при получении данных с сервера
+  var onError = function (message) {
+    return message;
+  };
+
+  // успешное получение данных с сервера
+  var onSuccess = function (data) {
+    renderPins(data);
+  };
+
   // Обработка события нажатия на Главный пин
   pinMain.addEventListener('mousedown', function (evt) {
     if (evt.button === 0) {
@@ -16,7 +26,7 @@
       if (map.classList.contains('map--faded')) {
         window.main.activatePage();
         window.form.fillAddressInput(pinMain, PIN_SHAPE_COEFFICIENT, MAIN_PIN_HEIGHT);
-        renderPins(window.data.getAds());
+        window.load(onSuccess, onError);
       }
     }
   });
@@ -27,7 +37,7 @@
       if (map.classList.contains('map--faded')) {
         window.main.activatePage();
         window.form.fillAddressInput(pinMain, PIN_SHAPE_COEFFICIENT, MAIN_PIN_HEIGHT);
-        renderPins(window.data.getAds());
+        window.load(onSuccess, onError);
       }
     }
   });
@@ -35,7 +45,9 @@
   // Отрисовка меток на карте
   var renderPins = function (data) {
     for (var i = 0; i < data.length; i++) {
-      fragment.appendChild(window.pin.pin(data[i]));
+      if (data[i].offer) {
+        fragment.appendChild(window.pin.pin(data[i]));
+      }
     }
     pinListElement.appendChild(fragment);
   };
