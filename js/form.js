@@ -123,6 +123,13 @@
   fillAddressInput(pinMain, CIRCLE_SHAPE_COEFFICIENT, PIN_HEIGHT);
   getMinPrice();
 
+  // отправка формы
+  adForm.addEventListener('submit', function (evt) {
+    window.upload(new FormData(adForm), function () {
+    });
+    evt.preventDefault();
+  });
+
   window.form = {
     fillAddressInput: fillAddressInput
   };
