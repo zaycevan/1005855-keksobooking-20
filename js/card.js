@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var map = document.querySelector('.map');
+  var filterContainer = document.querySelector('.map__filters-container');
   var TYPES_RUS = {
     'palace': 'Дворец',
     'flat': 'Квартира',
@@ -73,11 +75,19 @@
     return cardElement;
   };
 
+  // Отрисовка карточки объявления
+  var renderCard = function (data) {
+    closeCard();
+    if (data) {
+      map.insertBefore(getCard(data), filterContainer);
+    }
+  };
+
   // Закрытие карточки объявления
   var closeCard = function () {
-    var card = window.map.map.querySelector('.map__card');
+    var card = map.querySelector('.map__card');
     if (card) {
-      window.map.map.removeChild(card);
+      map.removeChild(card);
     }
     document.removeEventListener('keydown', onCardEscPress);
   };
@@ -92,6 +102,7 @@
 
   window.card = {
     getCard: getCard,
+    renderCard: renderCard,
     closeCard: closeCard,
     onCardEscPress: onCardEscPress
   };

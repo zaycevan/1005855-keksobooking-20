@@ -1,7 +1,10 @@
 'use strict';
 
 (function () {
+  var map = document.querySelector('.map');
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+  var fragment = document.createDocumentFragment();
+  var pinListElement = document.querySelector('.map__pins');
 
   // Добавление информации для меток из объявлений
   var pin = function (data) {
@@ -15,7 +18,7 @@
     pinElement.addEventListener('click', function () {
       inactivePin();
       activatePin(pinElement);
-      window.map.renderCard(data);
+      window.card.renderCard(data);
 
       document.addEventListener('keydown', window.card.onCardEscPress);
     });
@@ -24,13 +27,33 @@
       if (evt.key === 'Enter') {
         inactivePin();
         activatePin(pinElement);
-        window.map.renderCard(data);
+        window.card.renderCard(data);
 
         document.addEventListener('keydown', window.card.onCardEscPress);
       }
     });
 
     return pinElement;
+  };
+
+  // Отрисовка меток на карте
+  var renderPins = function (data) {
+    for (var i = 0; i < data.length; i++) {
+      if (data[i].offer) {
+        fragment.appendChild(pin(data[i]));
+      }
+    }
+    pinListElement.appendChild(fragment);
+  };
+
+  // Удаление меток с карты
+  var removePins = function () {
+    var pins = map.querySelectorAll('.map__pin:not(.map__pin--main)');
+    if (pins) {
+      for (var i = 0; i < pins.length; i++) {
+        pins[i].remove();
+      }
+    }
   };
 
   // Снятие класса .active с метки
@@ -48,6 +71,8 @@
 
   window.pin = {
     pin: pin,
+    renderPins: renderPins,
+    removePins: removePins,
     inactivePin: inactivePin
   };
 

@@ -88,8 +88,21 @@
     }
   };
 
+  var ifRoomNumberLessCapacity = function () {
+    if (roomNumber.value < capacity.value) {
+      roomNumber.setCustomValidity('Количество комнат не должно быть меньше количества гостей');
+    } else {
+      roomNumber.setCustomValidity('');
+    }
+  };
+
   roomNumber.addEventListener('change', function () {
     getNumberGuests(roomNumber, capacity);
+    ifRoomNumberLessCapacity();
+  });
+
+  capacity.addEventListener('change', function () {
+    ifRoomNumberLessCapacity();
   });
 
   // Валидация полей «Ваша фотография» и «Фотография жилья» - только изображение
@@ -119,19 +132,27 @@
     }
   });
 
+  // Нажатие на кнопку Reset и сбрасывание страницы
+  var formResetButton = adForm.querySelector('.ad-form__reset');
+
+  formResetButton.addEventListener('click', function (evt) {
+    evt.preventDefault();
+    window.main.disablePage();
+  });
+
+  // отправка формы
+  adForm.addEventListener('submit', function (evt) {
+    window.upload(new FormData(adForm));
+    evt.preventDefault();
+  });
+
   // Вызов функции
   fillAddressInput(pinMain, CIRCLE_SHAPE_COEFFICIENT, PIN_HEIGHT);
   getMinPrice();
 
-  // отправка формы
-  adForm.addEventListener('submit', function (evt) {
-    window.upload(new FormData(adForm), function () {
-    });
-    evt.preventDefault();
-  });
-
   window.form = {
-    fillAddressInput: fillAddressInput
+    fillAddressInput: fillAddressInput,
+    getMinPrice: getMinPrice
   };
 
 })();

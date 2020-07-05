@@ -48,7 +48,7 @@
         pinMain.style.top = (pinMain.offsetTop - shift.y) + 'px';
         pinMain.style.left = (pinMain.offsetLeft - shift.x) + 'px';
       } else if (pinBottomCoords.x < MIN_X) {
-        pinMain.style.left = (-pinMain.offsetWidth / 2) + 'px';
+        pinMain.style.left = (-pinMain.offsetWidth / 2) + 1 + 'px';
       } else if (pinBottomCoords.x > maxX) {
         pinMain.style.left = maxX - 1 - pinMain.offsetWidth / 2 + 'px';
       } else if (pinBottomCoords.y < MIN_Y) {

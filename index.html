@@ -37,7 +37,7 @@
 
       <!-- Фильтрация объявлений -->
       <div class="map__filters-container">
-        <form action="#" class="map__filters" autocomplete="off">
+        <form action="#" class="map__filters" autocomplete="off" enctype="multipart/form-data" method="post">
           <select name="housing-type" id="housing-type" class="map__filter" disabled>
             <option value="any" selected>Любой тип жилья</option>
             <option value="palace">Дворец</option>
@@ -144,9 +144,9 @@
         <fieldset class="ad-form__element">
           <label class="ad-form__label" for="capacity">Количество мест</label>
           <select id="capacity" name="capacity">
-            <option value="3" selected>для 3 гостей</option>
+            <option value="3">для 3 гостей</option>
             <option value="2">для 2 гостей</option>
-            <option value="1">для 1 гостя</option>
+            <option value="1" selected>для 1 гостя</option>
             <option value="0">не для гостей</option>
           </select>
         </fieldset>
@@ -252,9 +252,9 @@
   <script src="js/load.js"></script>
   <script src="js/data.js"></script>
   <script src="js/form.js"></script>
-  <script src="js/main.js"></script>
   <script src="js/card.js"></script>
   <script src="js/pin.js"></script>
+  <script src="js/main.js"></script>
   <script src="js/map.js"></script>
   <script src="js/move.js"></script>
 
