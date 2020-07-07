@@ -1,7 +1,11 @@
 'use strict';
 
 (function () {
-  var mapFilter = document.querySelector('.map__filters');
+  var CIRCLE_SHAPE_COEFFICIENT = 2;
+  var PIN_HEIGHT = 0;
+  var map = document.querySelector('.map');
+  var pinMain = map.querySelector('.map__pin--main');
+  var mapFilter = map.querySelector('.map__filters');
   var mapFilterChildren = mapFilter.children;
   var adForm = document.querySelector('.ad-form');
   var adFormFieldsets = adForm.querySelectorAll('fieldset');
@@ -11,6 +15,25 @@
     for (var i = 0; i < input.length; i++) {
       input[i].setAttribute('disabled', 'disabled');
     }
+  };
+
+  // Блокировка страницы
+  var disablePage = function () {
+    if (!map.classList.contains('map--faded')) {
+      map.classList.add('map--faded');
+    }
+    if (!adForm.classList.contains('ad-form--disabled')) {
+      adForm.classList.add('ad-form--disabled');
+    }
+    mapFilter.reset();
+    adForm.reset();
+    disableInput(adFormFieldsets);
+    disableInput(mapFilterChildren);
+    window.card.closeCard();
+    window.pin.removePins();
+    pinMain.setAttribute('style', 'left: 570px; top: 375px;');
+    window.form.fillAddressInput(pinMain, CIRCLE_SHAPE_COEFFICIENT, PIN_HEIGHT);
+    window.form.getMinPrice();
   };
 
   // Активация полей ввода
@@ -29,11 +52,10 @@
   };
 
   // Вызовы функций
-  disableInput(adFormFieldsets);
-  disableInput(mapFilterChildren);
+  disablePage();
 
   window.main = {
-    activatePage: activatePage
+    activatePage: activatePage,
+    disablePage: disablePage
   };
-
 })();

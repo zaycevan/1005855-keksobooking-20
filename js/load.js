@@ -18,7 +18,7 @@
       if (xhr.status === StatusCode.OK) {
         onSuccess(xhr.response);
       } else {
-        onError('Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText);
+        onError('Ошибка загрузки данных с сервера. Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText);
       }
     });
 
