@@ -48,6 +48,7 @@
   housingTypeFilter.addEventListener('change', function () {
     var newHousingType = housingTypeFilter.options[housingTypeFilter.selectedIndex].value;
     housingType = newHousingType;
+    window.card.closeCard();
     updateAds();
   });
 
