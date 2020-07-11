@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var MAX_SIMILAR_PINS = 5;
   var map = document.querySelector('.map');
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   var fragment = document.createDocumentFragment();
@@ -36,9 +37,16 @@
     return pinElement;
   };
 
-  // Отрисовка меток на карте
+  // Отрисовка 5 меток на карте
   var renderPins = function (data) {
-    for (var i = 0; i < data.length; i++) {
+    removePins();
+    var takeNumber;
+    if (data.length > MAX_SIMILAR_PINS) {
+      takeNumber = MAX_SIMILAR_PINS;
+    } else {
+      takeNumber = data.length;
+    }
+    for (var i = 0; i < takeNumber; i++) {
       if (data[i].offer) {
         fragment.appendChild(pin(data[i]));
       }
