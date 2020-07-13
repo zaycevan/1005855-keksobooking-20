@@ -43,12 +43,15 @@
     }
   };
 
+  var enableFilter = function () {
+    enableInput(mapFilterChildren);
+  };
+
   // Активация страницы
   var activatePage = function () {
     window.map.map.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
     enableInput(adFormFieldsets);
-    enableInput(mapFilterChildren);
   };
 
   // Вызовы функций
@@ -56,6 +59,7 @@
 
   window.main = {
     activatePage: activatePage,
-    disablePage: disablePage
+    disablePage: disablePage,
+    enableFilter: enableFilter
   };
 })();
