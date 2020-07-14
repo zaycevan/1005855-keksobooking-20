@@ -6,12 +6,39 @@
   var housingType;
   var housingPriceFilter = mapFilter.querySelector('#housing-price');
   var housingPrice;
+  var housingRoomsFilter = mapFilter.querySelector('#housing-rooms');
+  var housingRooms;
+  var housingGuestsFilter = mapFilter.querySelector('#housing-guests');
+  var housingGuests;
+
+
+  var getFilterValue = function () {
+    housingType = housingTypeFilter.options[housingTypeFilter.selectedIndex].value;
+
+    housingPrice = housingPriceFilter.options[housingPriceFilter.selectedIndex].value;
+
+    housingRooms = housingRoomsFilter.options[housingRoomsFilter.selectedIndex].value;
+
+    housingGuests = housingGuestsFilter.options[housingGuestsFilter.selectedIndex].value;
+
+    console.log(housingGuests + housingPrice + housingRooms);
+  };
+
+  // изменение фильтров
+  var onFilterChange = window.debounce(function () {
+    getFilterValue();
+    window.map.updateAds();
+  });
+
+  mapFilter.addEventListener('change', function () {
+    onFilterChange();
+  });
 
   // сортировка объявлений по рейтингу
   var getRank = function (ad) {
     var rank = 0;
     if (ad.offer.type === housingType) {
-      rank++;
+      rank += 2;
     }
     if (housingPrice === 'low' && ad.offer.price < 10000) {
       rank++;
@@ -20,6 +47,12 @@
       rank++;
     }
     if (housingPrice === 'high' && ad.offer.price >= 50000) {
+      rank++;
+    }
+    if (ad.offer.rooms === parseInt(housingRooms, 10)) {
+      rank++;
+    }
+    if (ad.offer.guests === parseInt(housingGuests, 10)) {
       rank++;
     }
 
@@ -36,22 +69,6 @@
       return 0;
     }
   };
-
-  // фильтрация по типу жилья
-  housingTypeFilter.addEventListener('change', function () {
-    var newHousingType = housingTypeFilter.options[housingTypeFilter.selectedIndex].value;
-    housingType = newHousingType;
-    window.card.closeCard();
-    window.map.updateAds();
-  });
-
-  // фильтрация по цене жилья
-  housingPriceFilter.addEventListener('change', function () {
-    var newHousingPrice = housingPriceFilter.options[housingPriceFilter.selectedIndex].value;
-    housingPrice = newHousingPrice;
-    window.card.closeCard();
-    window.map.updateAds();
-  });
 
   window.filter = {
     getRank: getRank,

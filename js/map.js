@@ -11,6 +11,7 @@
   var ads = [];
 
   var updateAds = function () {
+    window.card.closeCard();
     window.pin.renderPins(ads.sort(function (left, right) {
       var rankDiff = window.filter.getRank(right) - window.filter.getRank(left);
       if (rankDiff === 0) {
