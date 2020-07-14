@@ -34,7 +34,7 @@
     var photoElementOriginal = photoList.querySelector('.popup__photo');
     var photoElementClone = photoElementOriginal.cloneNode(true);
 
-    cardElement.querySelector('.popup__title').textContent = data.offer.title;
+    cardElement.querySelector('.popup__title').textContent = data.offer.title + window.filter.getRank(data);
     cardElement.querySelector('.popup__text--address').textContent = data.offer.address;
     cardElement.querySelector('.popup__text--price').textContent = data.offer.price + ' ₽/ночь';
     cardElement.querySelector('.popup__type').textContent = TYPES_RUS[data.offer.type];
