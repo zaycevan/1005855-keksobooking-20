@@ -11,7 +11,7 @@
   var housingGuestsFilter = mapFilter.querySelector('#housing-guests');
   var housingGuests;
 
-
+  // выбранные значения фильтров
   var getFilterValue = function () {
     housingType = housingTypeFilter.options[housingTypeFilter.selectedIndex].value;
 
@@ -21,7 +21,23 @@
 
     housingGuests = housingGuestsFilter.options[housingGuestsFilter.selectedIndex].value;
 
-    console.log(housingGuests + housingPrice + housingRooms);
+    getCheckedFeatures();
+  };
+
+  // выбранные значения удобств
+  var housingFeatures = mapFilter.querySelectorAll('input[name="features"]');
+  var checkedHousingFeatures = [];
+
+  var getCheckedFeatures = function () {
+    if (checkedHousingFeatures.length > 0) {
+      checkedHousingFeatures.length = 0;
+    }
+    for (var i = 0; i < housingFeatures.length; i++) {
+      if (housingFeatures[i].checked) {
+        checkedHousingFeatures.push(housingFeatures[i].value);
+      }
+    }
+    return checkedHousingFeatures;
   };
 
   // изменение фильтров
@@ -37,6 +53,7 @@
   // сортировка объявлений по рейтингу
   var getRank = function (ad) {
     var rank = 0;
+
     if (ad.offer.type === housingType) {
       rank += 2;
     }
@@ -54,6 +71,12 @@
     }
     if (ad.offer.guests === parseInt(housingGuests, 10)) {
       rank++;
+    }
+    // рейтинг по выборанным удобствам
+    for (var i = 0; i < checkedHousingFeatures.length; i++) {
+      if (ad.offer.features && ad.offer.features.includes(checkedHousingFeatures[i])) {
+        rank++;
+      }
     }
 
     return rank;

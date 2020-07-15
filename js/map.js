@@ -15,7 +15,7 @@
     window.pin.renderPins(ads.sort(function (left, right) {
       var rankDiff = window.filter.getRank(right) - window.filter.getRank(left);
       if (rankDiff === 0) {
-        rankDiff = window.filter.namesComparator(left.name, right.name);
+        rankDiff = window.filter.namesComparator(left.offer.title, right.offer.title);
       }
       return rankDiff;
     }));

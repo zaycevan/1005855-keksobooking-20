@@ -49,7 +49,6 @@
     for (var i = 0; i < takeNumber; i++) {
       if (data[i].offer) {
         fragment.appendChild(pin(data[i]));
-        console.log(data[i].offer.title + window.filter.getRank(data[i]));
       }
     }
     pinListElement.appendChild(fragment);
