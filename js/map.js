@@ -6,10 +6,9 @@
   var map = document.querySelector('.map');
   var pinListElement = document.querySelector('.map__pins');
   var pinMain = pinListElement.querySelector('.map__pin--main');
-
-  // отрисовка отсортированных объявлений
   var ads = [];
 
+  // отрисовка отсортированных объявлений
   var updateAds = function () {
     window.card.closeCard();
     window.pin.renderPins(ads.sort(function (left, right) {

@@ -8,6 +8,7 @@
     100: '0',
     any: ['any', '0', '1', '2', '3']
   };
+  var IMAGE_EXTS = ['image/png', 'image/jpeg', 'image/gif', 'image/svg', 'image/wmf'];
   var CIRCLE_SHAPE_COEFFICIENT = 2;
   var PIN_HEIGHT = 0;
   var pinMain = document.querySelector('.map__pin--main');
@@ -21,12 +22,12 @@
 
   title.addEventListener('input', function () {
     var valueLength = title.value.length;
-    var MIN_LENGTH = title.getAttribute('minlength');
-    var MAX_LENGTH = title.getAttribute('maxlength');
-    if (valueLength < MIN_LENGTH) {
-      title.setCustomValidity('Ещё ' + (MIN_LENGTH - valueLength) + ' символов');
-    } else if (valueLength > MAX_LENGTH) {
-      title.setCustomValidity('Удалите лишние ' + (valueLength - MAX_LENGTH) + ' символов');
+    var minLength = title.getAttribute('minlength');
+    var maxLength = title.getAttribute('maxlength');
+    if (valueLength < minLength) {
+      title.setCustomValidity('Ещё ' + (minLength - valueLength) + ' символов');
+    } else if (valueLength > maxLength) {
+      title.setCustomValidity('Удалите лишние ' + (valueLength - maxLength) + ' символов');
     } else {
       title.setCustomValidity('');
     }
@@ -108,12 +109,11 @@
   // Валидация полей «Ваша фотография» и «Фотография жилья» - только изображение
   var images = adForm.querySelector('#images');
   var avatar = adForm.querySelector('#avatar');
-  var imageExts = ['image/png', 'image/jpeg', 'image/gif', 'image/svg', 'image/wmf'];
 
   images.addEventListener('change', function () {
     for (var i = 0; i < images.files.length; i++) {
       var count = 0;
-      if (imageExts.indexOf(images.files[i].type) === -1) {
+      if (IMAGE_EXTS.indexOf(images.files[i].type) === -1) {
         if (count === i) {
           images.setCustomValidity('Загрузите изображение');
         }
@@ -125,7 +125,7 @@
   });
 
   avatar.addEventListener('change', function () {
-    if (imageExts.indexOf(avatar.files[0].type) === -1) {
+    if (IMAGE_EXTS.indexOf(avatar.files[0].type) === -1) {
       avatar.setCustomValidity('Загрузите изображение');
     } else {
       avatar.setCustomValidity('');
