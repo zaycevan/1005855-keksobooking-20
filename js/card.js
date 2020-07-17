@@ -34,7 +34,7 @@
     var photoElementOriginal = photoList.querySelector('.popup__photo');
     var photoElementClone = photoElementOriginal.cloneNode(true);
 
-    cardElement.querySelector('.popup__title').textContent = data.offer.title;
+    cardElement.querySelector('.popup__title').textContent = data.offer.title + window.filter.getRank(data);
     cardElement.querySelector('.popup__text--address').textContent = data.offer.address;
     cardElement.querySelector('.popup__text--price').textContent = data.offer.price + ' ₽/ночь';
     cardElement.querySelector('.popup__type').textContent = TYPES_RUS[data.offer.type];
@@ -44,10 +44,21 @@
     cardElement.querySelector('.popup__description').textContent = data.offer.description;
     cardElement.querySelector('.popup__avatar').setAttribute('src', data.author.avatar);
 
-    for (var i = data.offer.features.length; i < featureElement.length; i++) {
+    // добавляет значки удобств
+    var fragment = document.createDocumentFragment();
+
+    for (var i = 0; i < featureElement.length; i++) {
       featureList.removeChild(featureElement[i]);
     }
+    for (var k = 0; k < data.offer.features.length; k++) {
+      var feature = data.offer.features[k];
+      var dataFeatureElement = document.createElement('li');
+      dataFeatureElement.classList.add('popup__feature', 'popup__feature--' + feature);
+      fragment.appendChild(dataFeatureElement);
+    }
+    featureList.appendChild(fragment);
 
+    // добавляет фотографии жилья
     photoList.removeChild(photoElementOriginal);
     for (var j = 0; j < data.offer.photos.length; j++) {
       var photoElement = photoElementClone.cloneNode(true);
