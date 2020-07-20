@@ -1,14 +1,14 @@
 'use strict';
 
 (function () {
-  var CIRCLE_SHAPE_COEFFICIENT = 2;
-  var PIN_HEIGHT = 0;
-  var map = document.querySelector('.map');
-  var pinMain = map.querySelector('.map__pin--main');
-  var mapFilter = map.querySelector('.map__filters');
-  var mapFilterChildren = mapFilter.children;
-  var adForm = document.querySelector('.ad-form');
-  var adFormFieldsets = adForm.querySelectorAll('fieldset');
+  var MAIN_PIN_CIRCLE_HEIGHT = 62 / 2;
+  var MAIN_PIN_CIRCLE_WIDTH = 62;
+  var mapElement = document.querySelector('.map');
+  var pinMainElement = mapElement.querySelector('.map__pin--main');
+  var mapFilterElement = mapElement.querySelector('.map__filters');
+  var mapFilterChildren = mapFilterElement.children;
+  var adFormElement = document.querySelector('.ad-form');
+  var adFormFieldsetElements = adFormElement.querySelectorAll('fieldset');
 
   // Блокировка полей ввода
   var disableInput = function (input) {
@@ -19,20 +19,22 @@
 
   // Блокировка страницы
   var disablePage = function () {
-    if (!map.classList.contains('map--faded')) {
-      map.classList.add('map--faded');
+    if (!mapElement.classList.contains('map--faded')) {
+      mapElement.classList.add('map--faded');
     }
-    if (!adForm.classList.contains('ad-form--disabled')) {
-      adForm.classList.add('ad-form--disabled');
+    if (!adFormElement.classList.contains('ad-form--disabled')) {
+      adFormElement.classList.add('ad-form--disabled');
     }
-    mapFilter.reset();
-    adForm.reset();
-    disableInput(adFormFieldsets);
+    mapFilterElement.reset();
+    adFormElement.reset();
+    window.preview.removeImage();
+    window.preview.removeAvatar();
+    disableInput(adFormFieldsetElements);
     disableInput(mapFilterChildren);
-    window.card.closeCard();
-    window.pin.removePins();
-    pinMain.setAttribute('style', 'left: 570px; top: 375px;');
-    window.form.fillAddressInput(pinMain, CIRCLE_SHAPE_COEFFICIENT, PIN_HEIGHT);
+    window.card.close();
+    window.pin.remove();
+    pinMainElement.setAttribute('style', 'left: 570px; top: 375px;');
+    window.form.fillAddressInput(pinMainElement, MAIN_PIN_CIRCLE_WIDTH, MAIN_PIN_CIRCLE_HEIGHT);
     window.form.getMinPrice();
   };
 
@@ -42,16 +44,15 @@
       input[i].removeAttribute('disabled');
     }
   };
-
   var enableFilter = function () {
     enableInput(mapFilterChildren);
   };
 
   // Активация страницы
   var activatePage = function () {
-    window.map.map.classList.remove('map--faded');
-    adForm.classList.remove('ad-form--disabled');
-    enableInput(adFormFieldsets);
+    mapElement.classList.remove('map--faded');
+    adFormElement.classList.remove('ad-form--disabled');
+    enableInput(adFormFieldsetElements);
   };
 
   // Вызовы функций

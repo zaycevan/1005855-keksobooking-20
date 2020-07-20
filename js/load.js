@@ -10,7 +10,6 @@
   // получение данных с сервера
   window.load = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
-
     xhr.responseType = 'json';
 
     // загрузка данных с сервера
@@ -26,13 +25,10 @@
     xhr.addEventListener('error', function () {
       onError('Произошла ошибка соединения');
     });
-
     xhr.addEventListener('timeout', function () {
       onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
-
     xhr.timeout = TIMEOUT_IN_MS;
-
     xhr.open('GET', URL);
     xhr.send();
   };

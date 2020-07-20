@@ -1,8 +1,8 @@
 'use strict';
 
 (function () {
-  var map = document.querySelector('.map');
-  var filterContainer = document.querySelector('.map__filters-container');
+  var mapElement = document.querySelector('.map');
+  var filterContainerElement = document.querySelector('.map__filters-container');
   var TYPES_RUS = {
     'palace': 'Дворец',
     'flat': 'Квартира',
@@ -10,16 +10,16 @@
     'bungalo': 'Бунгало'};
   var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 
-  var getPluralWord = function (number, one, two, five) {
-    var n = Math.abs(number);
-    n %= 100;
-    if (n >= 5 && n <= 20) {
+  var getPluralWord = function (value, one, two, five) {
+    var number = Math.abs(value);
+    number %= 100;
+    if (number >= 5 && number <= 20) {
       return five;
     }
-    n %= 10;
-    if (n === 1) {
+    number %= 10;
+    if (number === 1) {
       return one;
-    } else if (n >= 2 && n <= 4) {
+    } else if (number >= 2 && number <= 4) {
       return two;
     }
     return five;
@@ -28,11 +28,11 @@
   // Получение карточки объявления
   var getCard = function (data) {
     var cardElement = cardTemplate.cloneNode(true);
-    var featureList = cardElement.querySelector('.popup__features');
-    var featureElement = cardElement.querySelectorAll('.popup__feature');
-    var photoList = cardElement.querySelector('.popup__photos');
-    var photoElementOriginal = photoList.querySelector('.popup__photo');
-    var photoElementClone = photoElementOriginal.cloneNode(true);
+    var featureListElement = cardElement.querySelector('.popup__features');
+    var featureElements = cardElement.querySelectorAll('.popup__feature');
+    var photoListElement = cardElement.querySelector('.popup__photos');
+    var photoOriginalElement = photoListElement.querySelector('.popup__photo');
+    var photoCloneElement = photoOriginalElement.cloneNode(true);
 
     cardElement.querySelector('.popup__title').textContent = data.offer.title;
     cardElement.querySelector('.popup__text--address').textContent = data.offer.address;
@@ -46,43 +46,39 @@
 
     // добавляет значки удобств
     var fragment = document.createDocumentFragment();
-
-    for (var i = 0; i < featureElement.length; i++) {
-      featureList.removeChild(featureElement[i]);
+    for (var i = 0; i < featureElements.length; i++) {
+      featureListElement.removeChild(featureElements[i]);
     }
-    for (var k = 0; k < data.offer.features.length; k++) {
-      var feature = data.offer.features[k];
+    data.offer.features.forEach(function (item) {
+      var feature = item;
       var dataFeatureElement = document.createElement('li');
       dataFeatureElement.classList.add('popup__feature', 'popup__feature--' + feature);
       fragment.appendChild(dataFeatureElement);
-    }
-    featureList.appendChild(fragment);
+    });
+    featureListElement.appendChild(fragment);
 
     // добавляет фотографии жилья
-    photoList.removeChild(photoElementOriginal);
-    for (var j = 0; j < data.offer.photos.length; j++) {
-      var photoElement = photoElementClone.cloneNode(true);
-      photoElement.setAttribute('src', data.offer.photos[j]);
-      photoList.appendChild(photoElement);
-    }
+    photoListElement.removeChild(photoOriginalElement);
+    data.offer.photos.forEach(function (item) {
+      var photoElement = photoCloneElement.cloneNode(true);
+      photoElement.setAttribute('src', item);
+      photoListElement.appendChild(photoElement);
+    });
 
     // Обработка события закрытия карточки объявления
     var cardClose = cardElement.querySelector('.popup__close');
-
     cardClose.addEventListener('click', function (evt) {
       evt.preventDefault();
       closeCard();
-      window.pin.inactivePin();
+      window.pin.inactive();
     });
-
     cardClose.addEventListener('keydown', function (evt) {
       if (evt.key === 'Enter') {
         evt.preventDefault();
         closeCard();
-        window.pin.inactivePin();
+        window.pin.inactive();
       }
     });
-
     return cardElement;
   };
 
@@ -90,15 +86,15 @@
   var renderCard = function (data) {
     closeCard();
     if (data) {
-      map.insertBefore(getCard(data), filterContainer);
+      mapElement.insertBefore(getCard(data), filterContainerElement);
     }
   };
 
   // Закрытие карточки объявления
   var closeCard = function () {
-    var card = map.querySelector('.map__card');
-    if (card) {
-      map.removeChild(card);
+    var cardElement = mapElement.querySelector('.map__card');
+    if (cardElement) {
+      mapElement.removeChild(cardElement);
     }
     document.removeEventListener('keydown', onCardEscPress);
   };
@@ -107,15 +103,14 @@
     if (evt.key === 'Escape') {
       evt.preventDefault();
       closeCard();
-      window.pin.inactivePin();
+      window.pin.inactive();
     }
   };
 
   window.card = {
-    getCard: getCard,
-    renderCard: renderCard,
-    closeCard: closeCard,
-    onCardEscPress: onCardEscPress
+    get: getCard,
+    render: renderCard,
+    close: closeCard,
+    onEscPress: onCardEscPress
   };
-
 })();

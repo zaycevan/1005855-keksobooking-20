@@ -1,61 +1,62 @@
 'use strict';
 
 (function () {
-  var mapFilter = window.map.map.querySelector('.map__filters');
-  var housingTypeFilter = mapFilter.querySelector('#housing-type');
+  var mapFilterElement = document.querySelector('.map__filters');
+  var mapFilterChildren = mapFilterElement.children;
+  var housingTypeFilterElement = mapFilterElement.querySelector('#housing-type');
   var housingType;
-  var housingPriceFilter = mapFilter.querySelector('#housing-price');
+  var housingPriceFilterElement = mapFilterElement.querySelector('#housing-price');
   var housingPrice;
-  var housingRoomsFilter = mapFilter.querySelector('#housing-rooms');
+  var housingRoomsFilterElement = mapFilterElement.querySelector('#housing-rooms');
   var housingRooms;
-  var housingGuestsFilter = mapFilter.querySelector('#housing-guests');
+  var housingGuestsFilterElement = mapFilterElement.querySelector('#housing-guests');
   var housingGuests;
+  var numberSelectedFilters;
+  var housingFeatureElements = mapFilterElement.querySelectorAll('input[name="features"]');
+  var checkedHousingFeatures = [];
 
   // выбранные значения фильтров
   var getFilterValue = function () {
-    housingType = housingTypeFilter.options[housingTypeFilter.selectedIndex].value;
-
-    housingPrice = housingPriceFilter.options[housingPriceFilter.selectedIndex].value;
-
-    housingRooms = housingRoomsFilter.options[housingRoomsFilter.selectedIndex].value;
-
-    housingGuests = housingGuestsFilter.options[housingGuestsFilter.selectedIndex].value;
-
+    housingType = housingTypeFilterElement.options[housingTypeFilterElement.selectedIndex].value;
+    housingPrice = housingPriceFilterElement.options[housingPriceFilterElement.selectedIndex].value;
+    housingRooms = housingRoomsFilterElement.options[housingRoomsFilterElement.selectedIndex].value;
+    housingGuests = housingGuestsFilterElement.options[housingGuestsFilterElement.selectedIndex].value;
     getCheckedFeatures();
   };
 
-  // выбранные значения удобств
-  var housingFeatures = mapFilter.querySelectorAll('input[name="features"]');
-  var checkedHousingFeatures = [];
+  // количество выбранных фильтров
+  var getNumberSelectedFilters = function () {
+    numberSelectedFilters = 0;
+    var mapFilters = Array.from(mapFilterChildren);
+    mapFilters.forEach(function (item) {
+      if (item.value !== 'any' && item.value) {
+        numberSelectedFilters++;
+      }
+    });
+    checkedHousingFeatures.forEach(function () {
+      numberSelectedFilters++;
+    });
+    return numberSelectedFilters;
+  };
 
+  // выбранные значения удобств
   var getCheckedFeatures = function () {
     if (checkedHousingFeatures.length > 0) {
       checkedHousingFeatures.length = 0;
     }
-    for (var i = 0; i < housingFeatures.length; i++) {
-      if (housingFeatures[i].checked) {
-        checkedHousingFeatures.push(housingFeatures[i].value);
+    for (var i = 0; i < housingFeatureElements.length; i++) {
+      if (housingFeatureElements[i].checked) {
+        checkedHousingFeatures.push(housingFeatureElements[i].value);
       }
     }
     return checkedHousingFeatures;
   };
 
-  // изменение фильтров
-  var onFilterChange = window.debounce(function () {
-    getFilterValue();
-    window.map.updateAds();
-  });
-
-  mapFilter.addEventListener('change', function () {
-    onFilterChange();
-  });
-
   // сортировка объявлений по рейтингу
   var getRank = function (ad) {
     var rank = 0;
-
     if (ad.offer.type === housingType) {
-      rank += 2;
+      rank++;
     }
     if (housingPrice === 'low' && ad.offer.price < 10000) {
       rank++;
@@ -73,12 +74,11 @@
       rank++;
     }
     // рейтинг по выборанным удобствам
-    for (var i = 0; i < checkedHousingFeatures.length; i++) {
-      if (ad.offer.features && ad.offer.features.includes(checkedHousingFeatures[i])) {
+    checkedHousingFeatures.forEach(function (item) {
+      if (ad.offer.features && ad.offer.features.includes(item)) {
         rank++;
       }
-    }
-
+    });
     return rank;
   };
 
@@ -88,14 +88,28 @@
       return 1;
     } else if (left < right) {
       return -1;
-    } else {
-      return 0;
     }
+    return 0;
   };
+
+  var compareRank = function (item) {
+    return getRank(item) === numberSelectedFilters;
+  };
+
+  // изменение фильтров
+  var onFilterChange = window.debounce(function () {
+    getFilterValue();
+    window.map.updateAds();
+  });
+
+  mapFilterElement.addEventListener('change', function () {
+    onFilterChange();
+  });
 
   window.filter = {
     getRank: getRank,
+    getNumberSelected: getNumberSelectedFilters,
+    compareRank: compareRank,
     namesComparator: namesComparator
   };
-
 })();

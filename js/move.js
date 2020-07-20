@@ -1,27 +1,35 @@
 'use strict';
 
 (function () {
-  var PIN_SHAPE_COEFFICIENT = 1;
-  var MAIN_PIN_HEIGHT = 22;
-  var MIN_Y = 130;
-  var MAX_Y = 630;
-  var MIN_X = 0;
-  var maxX = window.map.map.offsetWidth;
-  var pinMain = document.querySelector('.map__pin--main');
+  var MAIN_PIN_HEIGHT = 84;
+  var MAIN_PIN_WIDTH = 62;
+  var MIN_Y = 130 - MAIN_PIN_HEIGHT;
+  var MAX_Y = 630 - MAIN_PIN_HEIGHT;
+  var MIN_X = 0 - MAIN_PIN_WIDTH / 2;
+  var mapElement = document.querySelector('.map');
+  var MAX_X = mapElement.offsetWidth - MAIN_PIN_WIDTH / 2;
+  var pinMainElement = document.querySelector('.map__pin--main');
 
-  // проверка, что координаты метки внутри карты
-  var isInsideMap = function (x, y) {
-    return x >= MIN_X && x <= maxX && y >= MIN_Y && y <= MAX_Y;
+  // ограничиваем перемещение метки в пределах карты
+  var limitPinMove = function (x, y) {
+    if (x < MIN_X) {
+      pinMainElement.style['left'] = MIN_X + 'px';
+    } else if (x > MAX_X) {
+      pinMainElement.style['left'] = MAX_X + 'px';
+    } else if (y < MIN_Y) {
+      pinMainElement.style['top'] = MIN_Y + 'px';
+    } else if (y > MAX_Y) {
+      pinMainElement.style['top'] = MAX_Y + 'px';
+    }
   };
 
-  pinMain.addEventListener('mousedown', function (evt) {
+  // отслеживание перемещения метки
+  pinMainElement.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
-
     var startCoords = {
       x: evt.clientX,
       y: evt.clientY
     };
-
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
 
@@ -36,29 +44,16 @@
         x: moveEvt.clientX,
         y: moveEvt.clientY
       };
-
-      // координаты острого конца метки
-      var pinBottomCoords = {
-        x: pinMain.offsetLeft + pinMain.offsetWidth / 2,
-        y: pinMain.offsetTop + pinMain.offsetHeight / PIN_SHAPE_COEFFICIENT + MAIN_PIN_HEIGHT
+      var pinCoords = {
+        x: pinMainElement.offsetLeft - shift.x,
+        y: pinMainElement.offsetTop - shift.y
       };
-
-      // ограничиваем перемещение метки в пределах карты
-      if (isInsideMap(pinBottomCoords.x, pinBottomCoords.y)) {
-        pinMain.style.top = (pinMain.offsetTop - shift.y) + 'px';
-        pinMain.style.left = (pinMain.offsetLeft - shift.x) + 'px';
-      } else if (pinBottomCoords.x < MIN_X) {
-        pinMain.style.left = (-pinMain.offsetWidth / 2) + 1 + 'px';
-      } else if (pinBottomCoords.x > maxX) {
-        pinMain.style.left = maxX - 1 - pinMain.offsetWidth / 2 + 'px';
-      } else if (pinBottomCoords.y < MIN_Y) {
-        pinMain.style.top = MIN_Y - pinMain.offsetHeight - MAIN_PIN_HEIGHT + 'px';
-      } else if (pinBottomCoords.y > MAX_Y) {
-        pinMain.style.top = MAX_Y - pinMain.offsetHeight - MAIN_PIN_HEIGHT + 'px';
-      }
+      pinMainElement.style['left'] = pinCoords.x + 'px';
+      pinMainElement.style['top'] = pinCoords.y + 'px';
+      limitPinMove(pinCoords.x, pinCoords.y);
 
       // заполняем поле формы "Адрес"
-      window.form.fillAddressInput(pinMain, PIN_SHAPE_COEFFICIENT, MAIN_PIN_HEIGHT);
+      window.form.fillAddressInput(pinMainElement, MAIN_PIN_WIDTH, MAIN_PIN_HEIGHT);
     };
 
     // убираем обработчки событий после отпускания пина
@@ -67,9 +62,7 @@
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
     };
-
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
-
 })();
