@@ -6,8 +6,7 @@
   var MIN_Y = 130 - MAIN_PIN_HEIGHT;
   var MAX_Y = 630 - MAIN_PIN_HEIGHT;
   var MIN_X = 0 - MAIN_PIN_WIDTH / 2;
-  var mapElement = document.querySelector('.map');
-  var MAX_X = mapElement.offsetWidth - MAIN_PIN_WIDTH / 2;
+  var MAX_X = document.querySelector('.map').offsetWidth - MAIN_PIN_WIDTH / 2;
   var pinMainElement = document.querySelector('.map__pin--main');
 
   // ограничиваем перемещение метки в пределах карты

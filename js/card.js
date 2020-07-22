@@ -1,13 +1,13 @@
 'use strict';
 
 (function () {
-  var mapElement = document.querySelector('.map');
-  var filterContainerElement = document.querySelector('.map__filters-container');
   var TYPES_RUS = {
     'palace': 'Дворец',
     'flat': 'Квартира',
     'house': 'Дом',
     'bungalo': 'Бунгало'};
+  var mapElement = document.querySelector('.map');
+  var filterContainerElement = document.querySelector('.map__filters-container');
   var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 
   var getPluralWord = function (value, one, two, five) {
